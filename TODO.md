@@ -1,3 +1,8 @@
+========== TODAY =============
+[X] New Sidebar: Gudang to Bahan Baku with satuan
+[X] New Sidebar Quantity Bahan Baku
+[ ] Laporan Bahan baku with fillter date
+
 ========== Dashboard =========
 [X] Dashboard Page
 

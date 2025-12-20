@@ -22,19 +22,18 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => 'required|string|max:255',
-            'kuantitas' => 'required|numeric|min:0',
+            'nama' => 'string|max:255',
+            'satuan' => 'string',
+            'kuantitas' => 'numeric|min:0',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'nama.required' => 'Nama gudang wajib diisi.',
             'nama.string' => 'Nama gudang harus berupa teks.',
             'nama.max' => 'Nama gudang maksimal :max karakter.',
 
-            'kuantitas.required' => 'Kuantitas wajib diisi.',
             'kuantitas.numeric' => 'Kuantitas harus berupa angka.',
             'kuantitas.min' => 'Kuantitas minimal :min.',
         ];

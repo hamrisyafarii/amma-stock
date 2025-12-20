@@ -17,7 +17,7 @@ const List = () => {
             header={
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Manajemen Gudang
+                        Manajemen Bahan Baku
                     </h2>
                     <div className="text-sm text-gray-500">
                         Total {daftarGudang.length} item
@@ -28,14 +28,14 @@ const List = () => {
             <div className="bg-white shadow-sm rounded-lg">
                 <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h3 className="text-lg font-medium text-gray-900">
-                        Daftar Stok Barang
+                        Daftar Stok Bahan Baku
                     </h3>
                     <Link
                         href={route("gudang.create")}
                         className="inline-flex items-center px-4 py-2 bg-amber-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-amber-700 focus:bg-amber-700 active:bg-amber-900 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition ease-in-out duration-150"
                     >
                         <PlusIcon className="h-4 w-4 mr-2" />
-                        Tambah Barang
+                        Tambah Bahan Baku
                     </Link>
                 </div>
 
@@ -47,13 +47,19 @@ const List = () => {
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    Nama Barang
+                                    Nama Bahan Baku
                                 </th>
                                 <th
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    Kuantitas Stok
+                                    Kuantitas
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Satuan
                                 </th>
                                 <th scope="col" className="relative px-6 py-3">
                                     <span className="sr-only">Aksi</span>
@@ -71,15 +77,21 @@ const List = () => {
                                             {gudang.nama}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <span
-                                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                                    gudang.kuantitas > 10
-                                                        ? "bg-green-100 text-green-800"
-                                                        : "bg-red-100 text-red-800"
-                                                }`}
-                                            >
-                                                {gudang.kuantitas}
-                                            </span>
+                                            {gudang.kuantitas !== null &&
+                                            gudang.satuan ? (
+                                                <span
+                                                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800`}
+                                                >
+                                                    {gudang.kuantitas}
+                                                </span>
+                                            ) : (
+                                                <span className="text-gray-400 italic">
+                                                    Stok belum diatur
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {gudang.satuan || "-"}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                             <Link
@@ -87,11 +99,12 @@ const List = () => {
                                                     "gudang.edit",
                                                     gudang.id
                                                 )}
-                                                className="text-amber-600 hover:text-amber-900 inline-flex items-center"
+                                                className="text-indigo-600 hover:text-indigo-900 inline-flex items-center"
                                             >
-                                                <PencilIcon className="h-4 w-4 mr-1" />{" "}
+                                                <PencilIcon className="h-4 w-4 mr-1" />
                                                 Edit
                                             </Link>
+
                                             <button
                                                 onClick={() =>
                                                     handleDelete(gudang.id)
@@ -107,7 +120,7 @@ const List = () => {
                             ) : (
                                 <tr>
                                     <td
-                                        colSpan="3"
+                                        colSpan="4"
                                         className="px-6 py-12 text-center"
                                     >
                                         <div className="text-gray-500">

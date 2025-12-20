@@ -8,8 +8,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 const Update = ({ gudang }) => {
     const { data, setData, put, processing, errors } = useForm({
-        nama: gudang.nama || "",
-        kuantitas: gudang.kuantitas || "",
+        nama: gudang.nama,
     });
 
     const handleSubmit = (e) => {
@@ -23,17 +22,17 @@ const Update = ({ gudang }) => {
                 <div className="flex items-center gap-4">
                     <Link
                         href={route("gudang.index")}
-                        className="text-gray-500 hover:text-gray-700 transition-colors"
+                        className="text-gray-500 hover:text-gray-700"
                     >
                         <ArrowLeftIcon className="h-5 w-5" />
                     </Link>
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Edit Barang
+                        Edit Nama Bahan Baku
                     </h2>
                 </div>
             }
         >
-            <Head title={`Edit ${gudang.nama} - Amma Coffe`} />
+            <Head title={`Edit Nama: ${gudang.nama} - Amma Coffee`} />
 
             <div className="py-8">
                 <div className="max-w-2xl mx-auto sm:px-6 lg:px-8">
@@ -42,48 +41,19 @@ const Update = ({ gudang }) => {
                             <div>
                                 <InputLabel
                                     htmlFor="nama"
-                                    value="Nama Barang"
+                                    value="Nama Bahan Baku"
                                 />
-
                                 <TextInput
                                     id="nama"
-                                    name="nama"
                                     value={data.nama}
                                     className="mt-1 block w-full"
-                                    autoComplete="nama"
-                                    isFocused={true}
                                     onChange={(e) =>
                                         setData("nama", e.target.value)
                                     }
                                     required
                                 />
-
                                 <InputError
                                     message={errors.nama}
-                                    className="mt-2"
-                                />
-                            </div>
-
-                            <div>
-                                <InputLabel
-                                    htmlFor="kuantitas"
-                                    value="Kuantitas Stok"
-                                />
-
-                                <TextInput
-                                    id="kuantitas"
-                                    name="kuantitas"
-                                    type="number"
-                                    value={data.kuantitas}
-                                    className="mt-1 block w-full"
-                                    onChange={(e) =>
-                                        setData("kuantitas", e.target.value)
-                                    }
-                                    required
-                                />
-
-                                <InputError
-                                    message={errors.kuantitas}
                                     className="mt-2"
                                 />
                             </div>
@@ -91,15 +61,14 @@ const Update = ({ gudang }) => {
                             <div className="flex justify-end space-x-3 pt-4">
                                 <Link
                                     href={route("gudang.index")}
-                                    className="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-800 uppercase tracking-widest hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition ease-in-out duration-150"
+                                    className="..."
                                 >
                                     Batal
                                 </Link>
-                                <PrimaryButton
-                                    className="bg-amber-600 hover:bg-amber-700 focus:bg-amber-700"
-                                    disabled={processing}
-                                >
-                                    {processing ? "Menyimpan..." : "Perbarui"}
+                                <PrimaryButton disabled={processing}>
+                                    {processing
+                                        ? "Menyimpan..."
+                                        : "Perbarui Nama"}
                                 </PrimaryButton>
                             </div>
                         </form>

@@ -5,7 +5,8 @@ use App\Http\Controllers\KasirController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DashboardController; // <-- TAMBAHKAN INI
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LaporanBahanBakuController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,10 +32,12 @@ Route::prefix('/gudang')->name('gudang.')->group(function () {
     Route::group(['middleware' => ['auth']], function () {
         Route::get('/', [GudangController::class, 'index'])->name('index');
         Route::get('/create', [GudangController::class, 'create'])->name('create');
-        Route::get('/{gudang}', [GudangController::class, 'edit'])->name('edit');
+        Route::post('/', [GudangController::class, 'store'])->name('store');
+        Route::get('/{gudang}/edit', [GudangController::class, 'edit'])->name('edit');
         Route::put('/{gudang}', [GudangController::class, 'update'])->name('update');
         Route::delete('/{gudang}', [GudangController::class, 'destroy'])->name('destroy');
-        Route::post('/', [GudangController::class, 'store'])->name('store');
+        Route::get('/stok/manage', [GudangController::class, 'manageStok'])->name('stok.manage');
+        Route::put('/{gudang}/stok', [GudangController::class, 'updateStok'])->name('stok.update');
     });
 });
 
@@ -59,6 +62,7 @@ Route::prefix('/kasir')->name('kasir.')->group(function () {
 Route::prefix('/laporan')->name('laporan.')->group(function () {
     Route::group(['middleware' => ['auth']], function () {
         Route::get('/', [LaporanController::class, 'index'])->name('index');
+        Route::get('/bahan-baku', [LaporanBahanBakuController::class, 'index'])->name('bahan-baku.index');
     });
 });
 

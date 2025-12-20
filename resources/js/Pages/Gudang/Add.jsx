@@ -9,7 +9,6 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 const Add = () => {
     const { data, setData, post, processing, errors } = useForm({
         nama: "",
-        kuantitas: "",
     });
 
     const handleSubmit = (e) => {
@@ -28,12 +27,12 @@ const Add = () => {
                         <ArrowLeftIcon className="h-5 w-5" />
                     </Link>
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Tambah Barang Baru
+                        Tambah Master Bahan Baku
                     </h2>
                 </div>
             }
         >
-            <Head title="Tambah Barang - Amma Coffe" />
+            <Head title="Tambah Bahan Baku - Amma Coffe" />
 
             <div className="py-8">
                 <div className="max-w-2xl mx-auto sm:px-6 lg:px-8">
@@ -42,7 +41,7 @@ const Add = () => {
                             <div>
                                 <InputLabel
                                     htmlFor="nama"
-                                    value="Nama Barang"
+                                    value="Nama Bahan Baku"
                                 />
 
                                 <TextInput
@@ -60,30 +59,6 @@ const Add = () => {
 
                                 <InputError
                                     message={errors.nama}
-                                    className="mt-2"
-                                />
-                            </div>
-
-                            <div>
-                                <InputLabel
-                                    htmlFor="kuantitas"
-                                    value="Kuantitas Stok"
-                                />
-
-                                <TextInput
-                                    id="kuantitas"
-                                    name="kuantitas"
-                                    type="number"
-                                    value={data.kuantitas}
-                                    className="mt-1 block w-full"
-                                    onChange={(e) =>
-                                        setData("kuantitas", e.target.value)
-                                    }
-                                    required
-                                />
-
-                                <InputError
-                                    message={errors.kuantitas}
                                     className="mt-2"
                                 />
                             </div>

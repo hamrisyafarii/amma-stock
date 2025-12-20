@@ -11,7 +11,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return true; // Sesuaikan dengan logika otorisasi Anda jika perlu
     }
 
     /**
@@ -22,21 +22,26 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => 'required|string|max:255',
             'kuantitas' => 'required|numeric|min:0',
+            'satuan' => 'required|string|max:50',
         ];
     }
 
+    /**
+     * Get the custom error messages for the defined validation rules.
+     *
+     * @return array
+     */
     public function messages(): array
     {
         return [
-            'nama.required' => 'Nama gudang wajib diisi.',
-            'nama.string' => 'Nama gudang harus berupa teks.',
-            'nama.max' => 'Nama gudang maksimal :max karakter.',
-
-            'kuantitas.required' => 'Kuantitas wajib diisi.',
+            'kuantitas.required' => 'Kuantitas stok wajib diisi.',
             'kuantitas.numeric' => 'Kuantitas harus berupa angka.',
-            'kuantitas.min' => 'Kuantitas minimal :min.',
+            'kuantitas.min' => 'Kuantitas tidak boleh kurang dari :min.',
+
+            'satuan.required' => 'Satuan wajib diisi.',
+            'satuan.string' => 'Satuan harus berupa teks.',
+            'satuan.max' => 'Satuan maksimal :max karakter.',
         ];
     }
 }
