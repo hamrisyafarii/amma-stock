@@ -37,6 +37,7 @@ Route::prefix('/gudang')->name('gudang.')->group(function () {
         Route::put('/{gudang}', [GudangController::class, 'update'])->name('update');
         Route::delete('/{gudang}', [GudangController::class, 'destroy'])->name('destroy');
         Route::get('/stok/manage', [GudangController::class, 'manageStok'])->name('stok.manage');
+        Route::post('/stok/masuk', [GudangController::class, 'stokMasuk'])->name('stok.masuk');
         Route::put('/{gudang}/stok', [GudangController::class, 'updateStok'])->name('stok.update');
     });
 });

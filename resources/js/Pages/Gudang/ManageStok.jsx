@@ -1,39 +1,26 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, useForm } from "@inertiajs/react";
 import { useState } from "react";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
+import { Head } from "@inertiajs/react";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
+import TambahStokModal from "@/Components/TambahStokModal";
 
 const ManageStok = ({ daftarGudang }) => {
-    const [editingId, setEditingId] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const { data, setData, put, processing, errors, reset } = useForm({
-        kuantitas: "",
-        satuan: "",
-    });
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
-    const handleEdit = (gudang) => {
-        setEditingId(gudang.id);
-        setData({
-            kuantitas: gudang.kuantitas || "",
-            satuan: gudang.satuan || "",
-        });
-    };
-
-    const handleCancel = () => {
-        setEditingId(null);
-        reset();
-    };
-
-    const handleSubmit = (id) => {
-        put(route("gudang.stok.update", id), {
-            onSuccess: () => {
-                setEditingId(null);
-                reset();
-            },
-        });
+    const hitungStokAkhir = (gudang) => {
+        const stokMasuk =
+            gudang.stok_mutasis
+                ?.filter((m) => m.tipe === "masuk")
+                .reduce((sum, item) => sum + item.kuantitas, 0) || 0;
+        const stokKeluar =
+            gudang.stok_mutasis
+                ?.filter((m) => m.tipe === "keluar")
+                .reduce((sum, item) => sum + item.kuantitas, 0) || 0;
+        return stokMasuk - stokKeluar;
     };
 
     return (
@@ -49,6 +36,19 @@ const ManageStok = ({ daftarGudang }) => {
             <div className="py-8">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white shadow-sm rounded-lg">
+                        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                            <h3 className="text-lg font-medium text-gray-900">
+                                Daftar Stok Bahan Baku
+                            </h3>
+                            <PrimaryButton
+                                onClick={openModal}
+                                className="bg-amber-600 hover:bg-amber-700"
+                            >
+                                <PlusIcon className="h-4 w-4 mr-2" />
+                                Tambah Stok
+                            </PrimaryButton>
+                        </div>
+
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
@@ -57,15 +57,10 @@ const ManageStok = ({ daftarGudang }) => {
                                             Nama Bahan Baku
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Kuantitas
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Satuan
                                         </th>
-                                        <th className="relative px-6 py-3">
-                                            <span className="sr-only">
-                                                Aksi
-                                            </span>
+                                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Stok Tersedia
                                         </th>
                                     </tr>
                                 </thead>
@@ -75,98 +70,21 @@ const ManageStok = ({ daftarGudang }) => {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                 {gudang.nama}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                {editingId === gudang.id ? (
-                                                    <>
-                                                        <TextInput
-                                                            type="number"
-                                                            value={
-                                                                data.kuantitas
-                                                            }
-                                                            className="mt-1 block w-full"
-                                                            onChange={(e) =>
-                                                                setData(
-                                                                    "kuantitas",
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                        />
-                                                        <InputError
-                                                            message={
-                                                                errors.kuantitas
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    </>
-                                                ) : (
-                                                    <span className="text-sm text-gray-500">
-                                                        {gudang.kuantitas ??
-                                                            "-"}
-                                                    </span>
-                                                )}
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {gudang.satuan}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                {editingId === gudang.id ? (
-                                                    <>
-                                                        <TextInput
-                                                            value={data.satuan}
-                                                            className="mt-1 block w-full"
-                                                            onChange={(e) =>
-                                                                setData(
-                                                                    "satuan",
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                        />
-                                                        <InputError
-                                                            message={
-                                                                errors.satuan
-                                                            }
-                                                            className="mt-2"
-                                                        />
-                                                    </>
-                                                ) : (
-                                                    <span className="text-sm text-gray-500">
-                                                        {gudang.satuan ?? "-"}
-                                                    </span>
-                                                )}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                {editingId === gudang.id ? (
-                                                    <div className="space-x-2">
-                                                        <PrimaryButton
-                                                            onClick={() =>
-                                                                handleSubmit(
-                                                                    gudang.id
-                                                                )
-                                                            }
-                                                            disabled={
-                                                                processing
-                                                            }
-                                                        >
-                                                            Simpan
-                                                        </PrimaryButton>
-                                                        <button
-                                                            onClick={
-                                                                handleCancel
-                                                            }
-                                                            className="..."
-                                                        >
-                                                            Batal
-                                                        </button>
-                                                    </div>
-                                                ) : (
-                                                    <button
-                                                        onClick={() =>
-                                                            handleEdit(gudang)
-                                                        }
-                                                        className="text-amber-600 hover:text-amber-900"
-                                                    >
-                                                        Edit Stok
-                                                    </button>
-                                                )}
+                                            <td className="px-6 py-4 whitespace-nowrap text-center">
+                                                <span
+                                                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                                        hitungStokAkhir(
+                                                            gudang
+                                                        ) > 10
+                                                            ? "bg-green-100 text-green-800"
+                                                            : "bg-red-100 text-red-800"
+                                                    }`}
+                                                >
+                                                    {hitungStokAkhir(gudang)}
+                                                </span>
                                             </td>
                                         </tr>
                                     ))}
@@ -176,6 +94,12 @@ const ManageStok = ({ daftarGudang }) => {
                     </div>
                 </div>
             </div>
+
+            <TambahStokModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                daftarGudang={daftarGudang}
+            />
         </AuthenticatedLayout>
     );
 };

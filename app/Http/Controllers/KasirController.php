@@ -46,7 +46,6 @@ class KasirController extends Controller
                     $jumlahBahan = $gudang->pivot->jumlah_bahan;
                     $totalDipakai = $jumlahBahan * $item['qty'];
 
-                    // Buat catatan stok keluar
                     StokMutasi::create([
                         'gudang_id' => $gudang->id,
                         'tipe' => 'keluar',

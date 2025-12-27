@@ -8,9 +8,6 @@ use Inertia\Inertia;
 
 class GudangController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $daftarGudang = Gudang::all();
@@ -20,18 +17,11 @@ class GudangController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return Inertia::render('Gudang/Add');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * Method ini hanya untuk membuat master bahan baku (nama saja).
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -45,10 +35,6 @@ class GudangController extends Controller
             ->with('success', 'Bahan baku berhasil ditambahkan. Silakan atur stoknya.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * Method ini akan menampilkan form untuk mengatur stok (kuantitas & satuan).
-     */
     public function edit(Gudang $gudang)
     {
         return Inertia::render('Gudang/Update', [
@@ -56,9 +42,6 @@ class GudangController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource's name in storage.
-     */
     public function update(Request $request, Gudang $gudang)
     {
         $validated = $request->validate([
@@ -70,20 +53,44 @@ class GudangController extends Controller
         return redirect()->route('gudang.index')->with('success', 'Nama bahan baku berhasil diperbarui.');
     }
 
-    /**
-     * Display the stock management page.
-     */
     public function manageStok()
     {
-        $daftarGudang = Gudang::all();
+        $daftarGudang = Gudang::with('stokMutasis')->get();
+
         return Inertia::render('Gudang/ManageStok', [
             'daftarGudang' => $daftarGudang,
         ]);
     }
 
-    /**
-     * Update the stock for a specific item.
-     */
+
+    public function stokMasuk(Request $request)
+    {
+        $validated = $request->validate([
+            'gudang_id' => 'required|exists:gudangs,id',
+            'kuantitas' => 'required|numeric|min:1',
+            'satuan' => 'required|string|max:50',
+        ]);
+
+        $gudang = Gudang::findOrFail($validated['gudang_id']);
+
+        if (!$gudang->satuan) {
+            $gudang->update([
+                'satuan' => $validated['satuan'],
+            ]);
+        }
+
+        $gudang->stokMutasis()->create([
+            'tipe' => 'masuk',
+            'kuantitas' => $validated['kuantitas'],
+            'keterangan' => $validated['satuan'],
+            'tanggal' => now()->toDateString(),
+        ]);
+
+        return redirect()
+            ->route('gudang.stok.manage')
+            ->with('success', 'Stok berhasil ditambahkan.');
+    }
+
     public function updateStok(Request $request, Gudang $gudang)
     {
         $validated = $request->validate([
@@ -103,9 +110,6 @@ class GudangController extends Controller
         return redirect()->route('gudang.stok.manage')->with('success', 'Stok berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Gudang $gudang)
     {
         $gudang->delete();
